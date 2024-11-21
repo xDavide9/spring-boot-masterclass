@@ -22,7 +22,7 @@ import java.util.Arrays;
 // the motto is convention over configuration which means that the framework is already configured in most of its applications
 // (starter dependencies and their autoconfiguration) and only if you have specific requirements you should change this configuration
 @SpringBootApplication
-public class SpringbootMasterclassApplication {
+public class SpringCore {
 
     // now discuss some of the core concepts of the spring framework and implement them via spring boot
     // a bean is an object within the spring framework
@@ -33,7 +33,7 @@ public class SpringbootMasterclassApplication {
     // this can happen via constructor, setter, or field injection
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(SpringbootMasterclassApplication.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(SpringCore.class, args);
         Arrays.stream(context.getBeanDefinitionNames()).forEach(System.out::println);
         System.out.println("Number of beans: " + context.getBeanDefinitionCount()); // ~160 beans configured by default
     }
@@ -80,5 +80,4 @@ public class SpringbootMasterclassApplication {
             System.out.println("teardown");
         }
     }
-
 }
