@@ -2,6 +2,12 @@ package com.xdavide9.springbootmasterclass;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import jakarta.validation.Constraint;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -13,7 +19,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 // the spring framework is composed of many modules, like core spring, spring boot, spring data, spring security, spring web...
 // nowadays spring boot is used every spring-based application because it provides autoconfiguration and depending on the project other spring modules might be used
@@ -80,4 +92,41 @@ public class SpringCore {
             System.out.println("teardown");
         }
     }
+
+    // we can perform validation operations on bean thanks the bean validation api
+    // for example validate that a user is above 18 years old, for simple checks we can use these annotations
+    // but for more complex checks like an email there are more powerful methods like regex or even create an entire custom annotation
+    public record User(@NotBlank @Instructor String name, @Min(value = 18, message = "User must be above age") int age) {}
+
+    private User user = new User("David", 17);
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    @Constraint(validatedBy = {InstructorValidator.class})
+    public @interface Instructor {
+        String message() default "You are not Nelson";
+        Class<?>[] groups() default {};
+        Class<?>[] payload() default {};
+    }
+
+    public class InstructorValidator implements ConstraintValidator<Instructor, String> {
+        @Override
+        public boolean isValid(String value, jakarta.validation.ConstraintValidatorContext context) {
+            return value.equals("Nelson");
+        }
+    }
+
+    @Bean
+    public CommandLineRunner beanValidationCommandLineRunner(Validator validator) {
+        return args -> {
+            // validation can be triggered automatically by @Valid in a controller or manually by calling the validator
+            Set<ConstraintViolation<User>> violations = validator.validate(user);
+            violations.forEach(System.out::println);
+            // code handling violations...
+
+            // the major benefit of bean validation is that it moves validation logic from business logic (services) to pojos
+            // simplifying the code a lot
+        };
+    }
+
 }
