@@ -50,5 +50,22 @@ public class SpringWeb {
         // try and catch block where each handler will catch a specific exception and its subclasses
     }
 
+    // in a microservices architecture or even in any monolithic application it's important to communicate with other apis
+    // this means making requests instead of actually exposing endpoints to which clients are going to make requests
+    // the server now acts as the client
 
+    // now it's important to distinguish between synchronous and asynchronous communication
+    // in a rest api like this (spring-boot-starter-web) the communication is synchronous because the client makes a request and waits for the response
+    // while a graphql api for example is asynchronous and a client is web client, discussed in SpringWebFlux.java (spring-boot-starter-webflux)
+
+    // the most popular synchronous http client in spring boot is web client
+    // after configuration it can be used to make requests to other apis with some simple method calls but
+    // this is actually redundant code because we can use a declarative client (we do not write the implementation as it's obvious,
+    // just make the request and get the response)
+    // as declarative clients there are openfeign, especially good for microservices, or the newest HttpServiceProxyFactory
+    // with annotations like @HttpExchange and so on introduced in spring 6
+
+    // even if rest apis are synchronous, they can still work with some asynchronous elements like message queues
+    // a simple scenario is that a server receives a request, processes it synchronously and then acts as a producer and sends a message
+    // to a message queue for a consumer to process it asynchronously
 }
