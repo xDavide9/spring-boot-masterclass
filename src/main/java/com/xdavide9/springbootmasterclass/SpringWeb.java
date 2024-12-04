@@ -1,5 +1,11 @@
 package com.xdavide9.springbootmasterclass;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/v1/user")
 public class SpringWeb {
 
     // spring boot starter web comes with an embedded webserver that is autoconfigured based on properties values
@@ -27,4 +33,22 @@ public class SpringWeb {
     // API is a set of rules that allows one software application to communicate with another
     // the request/response model is an example of api where data can be exchanged thanks to http requests made to a specific api endpoint
     // spring boot allows to create rest or graphql apis with ease thanks to the spring web module
+
+    // a fundamental part of developing apis is handling errors
+
+    @GetMapping
+    public void registerUser() {
+        // should be delegating to a service generally with business logic but focus on exceptions...
+        // assume there is something wrong with the request so this code is called
+        throw new IllegalStateException("Bad Request");
+        // spring boot will handle it by returning a 500 status code
+        // it will by default not include the "Bad Request" message because it could contain sensitive information and it's generally
+        // not a good idea to include error messages unless you are building an api for other people to consume where crafting
+        // a good error message is important, always remember convention over configuration
+        // for more specific cases (make sure not to reinvent the wheel) it's possible to create custom hierarchies of exceptions
+        // handle with @ExceptionHandler in a @ControllerAdvice class just like if the entire application were wrapped in a giant
+        // try and catch block where each handler will catch a specific exception and its subclasses
+    }
+
+
 }
