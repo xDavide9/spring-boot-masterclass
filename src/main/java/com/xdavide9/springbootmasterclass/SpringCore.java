@@ -129,4 +129,27 @@ public class SpringCore {
         };
     }
 
+    // Spring supports multithreading and task execution and scheduling
+    // the simplest way to schedule a task is by using @Scheduled and specify properties inside it
+    // or even a cron expression which is a powerful and universal way to schedule tasks
+    // @Async is another annotation that can be used to make a method run in a separate thread i.e. asynchronously
+    // and you can configure the pool size which by default consists of only 1 thread
+    // just like a normal java application (more on this in SpringWebFlux.java)
+
+    // Spring supports properties just like a normal java application but in a more powerful ways
+    // application.properties or application.yml are the default files where properties are stored
+    // these properties can be existing ones or user made and generally allow you to change the application without modifying code
+    // in the first case they configure behavior of already existing code within the application (like port of the webserver)
+    // in the other case you have to write code that will read these properties and use them in the application
+    // (you can also read existing properties anyways and modify them the setup is flexible)
+    // in order to read a properties you can use @Value or @ConfigurationProperties
+    // the first one is used to read a single property while the second one is used to read a group of properties
+    // with a prefix in common (good practice also for custom properties)
+    // properties can be overridden by environment variables or command line arguments
+    // finally if you want to run the application with an entire different set of properties you can use spring profiles
+    // create a file like application-dev.properties and run the application with the profile dev
+    // now spring is going to pick up the file application-dev.properties instead of application.properties
+    // this is useful for example to run the application in a test environment with a different database
+    // or any other configuration
+
 }
