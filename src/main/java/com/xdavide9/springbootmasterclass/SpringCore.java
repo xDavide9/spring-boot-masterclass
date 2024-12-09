@@ -152,4 +152,53 @@ public class SpringCore {
     // this is useful for example to run the application in a test environment with a different database
     // or any other configuration
 
+    // An important aspect of a Spring application (as well as any application is logging)
+    // do not use print statements because they reduce performance, are not configurable and don't include important information
+    // in the java world there is slf4j (simple loggin facade for java) that allows you to use different logging frameworks
+    // without having to depend on a single vendor everytime
+    // spring by default configures logback but other alternatives are for example log4j2 and others
+    // whenever an application is run logging is already configured and there is a bunch by default
+    // in whatever library the project is using
+    // the important concept is that logs have levels which include trace, debug, info, warn, error...
+    // this is the severity of the message and the higher the level the more important the message is
+    // in order of ascending severity: trace, debug, info, warn, error
+    // the default level is info and everything below is not logged but if we were to set the application root log level (every package)
+    // to debug we would see a lot more messages, but this is not generally recommended because it's going to be a lot of messages
+    // and can be useful in specific cases (trace includes even more data)
+    // the log level can be configured both for the entire application (root, every package) or specific packages
+    // meaning there could be packages with a different log level than the root (e.g. debug for database because maybe there's a problem)
+    // with logback it's possible to configure also the format and where these logs are output with an Appender
+    // by default the appender has the classic format date, log level, thread, class, message and so on...
+    // but this could be configured to include other data or output to a file instead of the console (or even both) or to a database...
+    // with a FileAppender
+    // this file is called logback-spring.xml and is placed in the resources folder that is on the classpath
+    // logs are important not only for the developer but for the devops team that is going to monitor the application
+    // especially with metrics and logs that are going to be sent to a monitoring system
+    // logs can and should be written by the developer and it's easy to do so with the logger object
+    // which can be instantiated with LoggerFactory.getLogger(Class.class) and then used to log messages
+    // or with @Slf4j from lombok to reduce the boilerplate
+
+    // About metrics, this is other data that is important to monitor the application (health checks, performance, errors
+    // on endpoints, database and other services like message brokers...)
+    // like logging there are already a lot of metrics configured and being tracked by default but we can create custom ones
+    // tailored to application specific needs (image a number_of_orders metric) and this can be done with micrometer
+    // before getting to what actually micrometer is it's important to understand the spring boot actuator
+    // this component exposes the said above metrics from a spring boot application
+    // by default not much is exposed for security concerns but it's possible to expose more information if necessary by changing properties' values
+    // the most important endpoint is /actuator/health which returns the health of the application (information about the status, disk space, memory and so on...)
+    // but there are many other endpoints like /actuator/metrics, /actuator/env, /actuator/loggers, /actuator/beans, /actuator/conditions...
+    // now go back to micrometer
+    // micrometer is a facade that allows to use different monitoring systems like prometheus, datadog...
+    // and integrate them with spring boot easily through the actuator
+    // now that the data is exposed we can use a system like grafana to visualize it and create dashboards
+    // grafana integrates well with any monitoring tool like also zipkin for http requests tracing when creating microservices for example
+
+    // now that we know this concept of monitoring metrics, something similar can be done with logs too
+    // we can send logs to a centralized system like logstash in json format if for example we have a microservices architecture
+    // and want to see all the logs together instead of checking each individual service
+    // or to kibana which is a visualization tool that can be used to create dashboards with the logs
+    // like how many error logs are there, what is the most heated api endpoint and so on...
+
+    // so how does it different from metrics? metrics are more about the general state of the application
+    // while logs detail specific events in detail so it all depends on the granularity of the situation at hand
 }
